@@ -4,14 +4,14 @@
 #
 # Fixes:
 # 1. Improve tests so they are more meaningful, besides just assuring the function runs
-# 2. Remove duplicates from getting scraped, using some funky regex thang
-# 3. Make sure the text that's getting scraped is actually what I want to add to the corpus
+# 2. Make sure the text that's getting scraped is actually what I want to add to the corpus
 #
 
 
 import urllib.request as urq
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
+import re
 
 try:
     import psyco
@@ -72,7 +72,7 @@ def locate_descriptive_text(structured_page, filename):
     return
 
 
-def scrape_page(url, sequence, filename):
+def scrape_page(url, sequence, id_sequence, filename):
     """
     Scrapes a page and all underlying page whose titles match a certain sequence, writing
     the text results into a text file.
@@ -86,13 +86,12 @@ def scrape_page(url, sequence, filename):
     # find urls in layer 0
     url_list = locate_linked_pages(url, sequence)
     # all urls that haven't yet been seen, which should be everything
-    undiscovered = url_list - master_list
-    master_list.update(scrape_layer(undiscovered, master_list, sequence, filename))
+    master_list.update(scrape_layer(url_list, master_list, sequence, id_sequence, filename))
 
     return master_list
 
 
-def scrape_layer(undiscovered, master_list, sequence, filename):
+def scrape_layer(undiscovered, master_list, sequence, id_sequence, filename):
     """
     Examines each of the pages matching a given sequence on a layer, writing the results to a text file.
     :param undiscovered: the URLs that have not yet been searched
@@ -111,19 +110,53 @@ def scrape_layer(undiscovered, master_list, sequence, filename):
     else:
         # we want to discover new URLs on each page
         for link in undiscovered:
-            print(link)
-            page = open_page(link, inspect=False)
-            locate_descriptive_text(page, filename)
-            master_list.add(link)
-            url_list.update(locate_linked_pages(link, sequence))
+            id_number = find_id(link, id_sequence)
+            if not identify_duplicates(link, master_list, id_sequence):
+                master_list.add(id_number)
+                print(link)
+                page = open_page(link, inspect=False)
+                locate_descriptive_text(page, filename)
+                url_list.update(locate_linked_pages(link, sequence))
 
         # recurse to the next layer, looking at only undiscovered links
         undiscovered = (url_list - master_list)
-        master_list.update(scrape_layer(undiscovered, master_list, sequence, filename))
+        master_list.update(scrape_layer(undiscovered, master_list, sequence, id_sequence, filename))
 
         return master_list
 
 
+def find_id(url, id_sequence):
+    """
+
+    :param url:
+    :param id_sequence: NUMIS-[0-9]*
+    :return:
+    """
+    # find the parts of the string that match id_sequence
+    if re.search(id_sequence, url):
+        id = re.search(id_sequence, url).group()
+    else:
+        id = None
+    return id
+
+
+def identify_duplicates(url, master_list, id_sequence):
+    """
+
+    :return:
+    """
+    id_number = find_id(url, id_sequence)
+    if id_number:
+        # check that ID against the master_list
+        if id_number in master_list:
+            return True
+        else:
+            return False
+    # if no ID number, treat the page as a duplicate and don't add it to the list
+    else:
+        return True
+
+
 if __name__ == '__main__':
     scrape_page('http://shop.numitea.com/Tea-by-Type/c/NumiTeaStore@ByType',
-                'c=NumiTeaStore@ByType', 'tea_corpus.txt')
+                'c=NumiTeaStore@ByType', 'NUMIS-[0-9]*', 'tea_corpus.txt')
