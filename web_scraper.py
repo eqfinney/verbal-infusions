@@ -4,18 +4,9 @@
 #
 # Fixes:
 # 1. Improve tests so they are more meaningful, besides just assuring the function runs
-# 2. Currently, this code is ABSURDLY SLOW which makes sense since I use too many for loops
-# 3. Improve scraping functionality so that it can scrape nested pages
-# 4. Make sure the text that's getting scraped is actually what I want to add to the corpus
-
-"""
-1. Make sure I hit every node at least once.
-2. When I hit a node:
-   a. Make sure I mark the node as having been hit.
-   b. Make sure I scrape the text on the page.
-Node = web page. Edge = URL to another web page.
-This is a directed graph, so there's that to consider.
-"""
+# 2. Remove duplicates from getting scraped, using some funky regex thang
+# 3. Make sure the text that's getting scraped is actually what I want to add to the corpus
+#
 
 
 import urllib.request as urq
@@ -43,18 +34,20 @@ def open_page(url, inspect=False):
     return structured_page
 
 
-def locate_linked_pages(url):
+def locate_linked_pages(url, sequence):
     """
     Given a page structured in a Beautiful Soup format, returns all the pages linked
+    that contain a given sequence of characters in their URLs.
     :param url: a url for a web page, string
+    :param sequence: the sequence to match in each of the chosen URLs
     :return: linked_pages, a list of strings containing linked URLs
     """
     structured_page = open_page(url)
     all_links = structured_page.find_all('a')
     set_of_links = set()
     for link in all_links:
-        address = link.get('href')
-        if address:
+        address = str(link.get('href'))
+        if sequence in address:
             if not urlparse(address).netloc:
                 scheme = urlparse(url).scheme
                 base_url = urlparse(url).netloc
@@ -62,22 +55,6 @@ def locate_linked_pages(url):
             set_of_links.add(address)
 
     return set_of_links
-
-
-def filter_pages(url, sequence):
-    """
-    Given a page structured in Beautiful Soup format, returns all pages linked that contain
-    a given sequence of characters in their URLs.
-    :param url: a url for a web page, string
-    :param sequence: the sequence to match in each of the chosen URLs
-    :return: url_list, a list of URLs that contain a matching sequence
-    """
-    links = locate_linked_pages(url)
-    url_list = set()
-    { url_list.add(link) for link in links if sequence in link }
-    #print(url_list)
-
-    return url_list
 
 
 def locate_descriptive_text(structured_page, filename):
@@ -88,34 +65,63 @@ def locate_descriptive_text(structured_page, filename):
     :return: nothing, but should write a corpus of text from the website to file
     """
     # remove headers from the Beautiful Soup file
-    all_text = structured_page.get_text(' ', strip=True)
-    #print(all_text)
-    with open(filename, 'w') as f:
+    all_text = structured_page.prettify() #get_text(' ', strip=True)
+    with open(filename, 'a') as f:
         f.write(all_text)
 
     return
 
 
-def scrape_page(url, sequence, filename, master_list=set(), inspect=False):
+def scrape_page(url, sequence, filename):
     """
     Scrapes a page and all underlying page whose titles match a certain sequence, writing
     the text results into a text file.
     :param url: the string denoting the base page to scrape
     :param sequence: the sequence any linked URLs must match to be scraped
     :param filename: the filename of the resultant text corpus
-    :param inspect: boolean, whether or not to inspect each page
     :return: set_of_links, a set of the pages successfully scraped
     """
 
-    links = filter_pages(url, sequence)
+    master_list = set()
+    # find urls in layer 0
+    url_list = locate_linked_pages(url, sequence)
+    # all urls that haven't yet been seen, which should be everything
+    undiscovered = url_list - master_list
+    master_list.update(scrape_layer(undiscovered, master_list, sequence, filename))
 
-    if links.issubset(master_list):
+    return master_list
+
+
+def scrape_layer(undiscovered, master_list, sequence, filename):
+    """
+    Examines each of the pages matching a given sequence on a layer, writing the results to a text file.
+    :param undiscovered: the URLs that have not yet been searched
+    :param master_list: the URLs that have been searched, no duplicates
+    :param sequence: the sequence any linked URLs must match to be scraped
+    :param filename: the name of the file to which to write the HTML
+    :return:
+    """
+    print('we have', len(undiscovered), 'objects!')
+    url_list = set()
+
+    # return master list if undiscovered is empty
+    if not undiscovered:
         return master_list
 
     else:
-        new_list = scrape_page(link, sequence, filename, master_list)
-        page = open_page(link, inspect=inspect)
-        locate_descriptive_text(page, filename)
+        # we want to discover new URLs on each page
+        for link in undiscovered:
+            print(link)
+            page = open_page(link, inspect=False)
+            locate_descriptive_text(page, filename)
+            master_list.add(link)
+            url_list.update(locate_linked_pages(link, sequence))
+
+        # recurse to the next layer, looking at only undiscovered links
+        undiscovered = (url_list - master_list)
+        master_list.update(scrape_layer(undiscovered, master_list, sequence, filename))
+
+        return master_list
 
 
 if __name__ == '__main__':
