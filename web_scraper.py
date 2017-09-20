@@ -20,6 +20,66 @@ except ImportError:
     pass
 
 
+class PageScraper:
+
+    def __init__(self, url, sequence, id_sequence, filename):
+        """
+        Initializes the PageScraper class.
+        :param url: the base URL from which to scrape, string
+        :param sequence: the sequence to which all URLs must be matched if they are to be scraped, string
+        :param id_sequence: the sequence used to identify a product ID, string
+        :param filename: the filename into which to scrape the website information, string
+        """
+        self.url = url
+        self.sequence = sequence
+        self.id_sequence = id_sequence
+        self.filename = filename
+        # keeps track of all URLs that have been visited so far
+        self.master_list = set()
+
+    def scrape_page(self):
+        """
+        Scrapes a page and all underlying page whose titles match a certain sequence, writing
+        the text results into a text file.
+        :return: set_of_links, a set of the pages successfully scraped
+        """
+
+        # find urls in layer 0
+        undiscovered = locate_linked_pages(self.url, self.sequence)
+        # all urls that haven't yet been seen, which should be everything
+        self.master_list.update(self.scrape_layer(undiscovered))
+
+    def scrape_layer(self, undiscovered):
+        """
+        Examines each of the pages matching a given sequence on a layer, writing the results to a text file.
+        :param undiscovered: the URLs that have not yet been searched
+        :return:
+        """
+        print('we have', len(undiscovered), 'objects!')
+        url_list = set()
+
+        # return master list if undiscovered is empty
+        if not undiscovered:
+            return self.master_list
+
+        else:
+            # we want to discover new URLs on each page
+            for link in undiscovered:
+                id_number = find_id(link, self.id_sequence)
+                if not identify_duplicates(link, self.master_list, self.id_sequence):
+                    self.master_list.add(id_number)
+                    print(link)
+                    page = open_page(link, inspect=False)
+                    locate_descriptive_text(page, self.filename)
+                    url_list.update(locate_linked_pages(link, self.sequence))
+
+            # recurse to the next layer, looking at only undiscovered links
+            undiscovered = (url_list - self.master_list)
+            self.master_list.update(self.scrape_layer(undiscovered))
+
+            return self.master_list
+
+
 def open_page(url, inspect=False):
     """
     Opens a web page using the urllib.request library, and returns a Beautiful Soup object
@@ -72,78 +132,28 @@ def locate_descriptive_text(structured_page, filename):
     return
 
 
-def scrape_page(url, sequence, id_sequence, filename):
-    """
-    Scrapes a page and all underlying page whose titles match a certain sequence, writing
-    the text results into a text file.
-    :param url: the string denoting the base page to scrape
-    :param sequence: the sequence any linked URLs must match to be scraped
-    :param filename: the filename of the resultant text corpus
-    :return: set_of_links, a set of the pages successfully scraped
-    """
-
-    master_list = set()
-    # find urls in layer 0
-    url_list = locate_linked_pages(url, sequence)
-    # all urls that haven't yet been seen, which should be everything
-    master_list.update(scrape_layer(url_list, master_list, sequence, id_sequence, filename))
-
-    return master_list
-
-
-def scrape_layer(undiscovered, master_list, sequence, id_sequence, filename):
-    """
-    Examines each of the pages matching a given sequence on a layer, writing the results to a text file.
-    :param undiscovered: the URLs that have not yet been searched
-    :param master_list: the URLs that have been searched, no duplicates
-    :param sequence: the sequence any linked URLs must match to be scraped
-    :param filename: the name of the file to which to write the HTML
-    :return:
-    """
-    print('we have', len(undiscovered), 'objects!')
-    url_list = set()
-
-    # return master list if undiscovered is empty
-    if not undiscovered:
-        return master_list
-
-    else:
-        # we want to discover new URLs on each page
-        for link in undiscovered:
-            id_number = find_id(link, id_sequence)
-            if not identify_duplicates(link, master_list, id_sequence):
-                master_list.add(id_number)
-                print(link)
-                page = open_page(link, inspect=False)
-                locate_descriptive_text(page, filename)
-                url_list.update(locate_linked_pages(link, sequence))
-
-        # recurse to the next layer, looking at only undiscovered links
-        undiscovered = (url_list - master_list)
-        master_list.update(scrape_layer(undiscovered, master_list, sequence, id_sequence, filename))
-
-        return master_list
-
-
 def find_id(url, id_sequence):
     """
-
-    :param url:
-    :param id_sequence: NUMIS-[0-9]*
-    :return:
+    Matches the identification sequence in a URL, returning the ID number in the URL
+    :param url: a URL from which to draw a product ID number
+    :param id_sequence: the identification sequence used to ID products in a URL
+    :return: id_number, the ID number of the product referenced in the URL
     """
     # find the parts of the string that match id_sequence
     if re.search(id_sequence, url):
-        id = re.search(id_sequence, url).group()
+        id_number = re.search(id_sequence, url).group()
     else:
-        id = None
-    return id
+        id_number = None
+    return id_number
 
 
 def identify_duplicates(url, master_list, id_sequence):
     """
-
-    :return:
+    Determines whether the product has already been included in a master list of products.
+    :param url: a URL from which to draw a product ID number
+    :param master_list: the master list of products with which to compare the product ID
+    :param id_sequence: the ID sequence used to ID products in a URL
+    :return: a Boolean showing whether the product has been seen (T) or not (F)
     """
     id_number = find_id(url, id_sequence)
     if id_number:
@@ -158,5 +168,6 @@ def identify_duplicates(url, master_list, id_sequence):
 
 
 if __name__ == '__main__':
-    scrape_page('http://shop.numitea.com/Tea-by-Type/c/NumiTeaStore@ByType',
-                'c=NumiTeaStore@ByType', 'NUMIS-[0-9]*', 'tea_corpus.txt')
+    NumiTeaScraper = PageScraper('http://shop.numitea.com/Tea-by-Type/c/NumiTeaStore@ByType',
+                                 'c=NumiTeaStore@ByType', 'NUMIS-[0-9]*', 'tea_corpus.txt')
+    NumiTeaScraper.scrape_page()
