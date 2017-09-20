@@ -117,17 +117,49 @@ def locate_linked_pages(url, sequence):
     return set_of_links
 
 
-def locate_descriptive_text(structured_page, filename):
+def read_soup(filename):
+    """
+    Given a text file structured as prettified Beautiful Soup HTML, returns a Beautiful Soup object
+    :param filename: the name of the file from which to read the HTML
+    :return: structured_page, the Beautiful Soup object
+    """
+    with open(filename, 'r') as f:
+        page = f.read()
+
+    html_header = "<!DOCTYPE html>"
+    all_pages = page.split(sep=html_header)
+    # turn text file into a Beautiful Soup object
+    structured_pages = []
+    for web_page in all_pages[1:]:
+        structured_pages.append(BeautifulSoup(''.join([html_header,web_page]), 'lxml'))
+    return structured_pages
+
+
+def locate_descriptive_text(structured_pages, filename):
     """
     Given a page structured in a Beautiful Soup format, returns all descriptive text on page
-    :param structured_page: web page, structured in Beautiful Soup format
+    :param structured_pages: list of web pages, structured in Beautiful Soup format
     :param filename: the name of the file to which to write the corpus, string
-    :return: nothing, but should write a corpus of text from the website to file
+    :return: nothing, but should write a corpus of text to file
     """
-    # remove headers from the Beautiful Soup file
-    all_text = structured_page.prettify() #get_text(' ', strip=True)
     with open(filename, 'a') as f:
-        f.write(all_text)
+        for i, web_page in enumerate(structured_pages):
+            print(i)
+            prod_description = web_page.find_all('div', class_="product_description")
+            print(prod_description)
+            for prod in prod_description:
+                if prod['class'][0] == "product_description":
+                    for element in prod:
+                        if element.string:
+                            f.write(element.string)
+                elif prod['class'][0] == "tab_content productinformation":
+                    for element in prod:
+                        print(element)
+                        for child in element.id.ul.children:
+                            if child.string:
+                                f.write(child.string)
+                else:
+                    print("There's extra stuff here I didn't account for!")
 
     return
 
