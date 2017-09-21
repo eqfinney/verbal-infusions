@@ -135,7 +135,7 @@ def read_soup(filename):
     return structured_pages
 
 
-def locate_descriptive_text(structured_pages, filename):
+def locate_descriptive_text(structured_page, filename):
     """
     Given a page structured in a Beautiful Soup format, returns all descriptive text on page
     :param structured_pages: list of web pages, structured in Beautiful Soup format
@@ -143,23 +143,21 @@ def locate_descriptive_text(structured_pages, filename):
     :return: nothing, but should write a corpus of text to file
     """
     with open(filename, 'a') as f:
-        for i, web_page in enumerate(structured_pages):
-            print(i)
-            prod_description = web_page.find_all('div', class_="product_description")
-            print(prod_description)
-            for prod in prod_description:
-                if prod['class'][0] == "product_description":
-                    for element in prod:
-                        if element.string:
-                            f.write(element.string)
-                elif prod['class'][0] == "tab_content productinformation":
-                    for element in prod:
-                        print(element)
-                        for child in element.id.ul.children:
+        prod_description = structured_page.find_all('div', class_=re.compile("product"))
+        for prod in prod_description:
+            if prod['class'][0] == "product_description":
+                for element in prod:
+                    if element.string:
+                        f.write(element.string)
+            elif prod['class'][0] == "tab_content":
+                if prod.ul:
+                    for child in prod.ul.children:
+                        if child:
                             if child.string:
+                                print(child.string)
                                 f.write(child.string)
-                else:
-                    print("There's extra stuff here I didn't account for!")
+            else:
+                pass
 
     return
 
