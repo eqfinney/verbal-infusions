@@ -3,8 +3,7 @@
 # Author: Emily Quinn Finney
 #
 # Fixes:
-# 1. Improve tests so they are more meaningful, besides just assuring the function runs
-# 2. Make sure the text that's getting scraped is actually what I want to add to the corpus
+# Refactor a few functions so that their purpose is obvious and as generalizable as possible
 #
 
 
@@ -22,7 +21,7 @@ except ImportError:
 
 class PageScraper:
 
-    def __init__(self, url, sequence, id_sequence, filename):
+    def __init__(self, url, sequence, id_sequence, filename, tag_names, tag_pattern):
         """
         Initializes the PageScraper class.
         :param url: the base URL from which to scrape, string
@@ -34,6 +33,8 @@ class PageScraper:
         self.sequence = sequence
         self.id_sequence = id_sequence
         self.filename = filename
+        self.tag_names = tag_names
+        self.tag_pattern = tag_pattern
         # keeps track of all URLs that have been visited so far
         self.master_list = set()
 
@@ -70,7 +71,7 @@ class PageScraper:
                     self.master_list.add(id_number)
                     print(link)
                     page = open_page(link, inspect=False)
-                    locate_descriptive_text(page, self.filename)
+                    self.locate_descriptive_text(page)
                     url_list.update(locate_linked_pages(link, self.sequence))
 
             # recurse to the next layer, looking at only undiscovered links
@@ -78,6 +79,32 @@ class PageScraper:
             self.master_list.update(self.scrape_layer(undiscovered))
 
             return self.master_list
+
+    def locate_descriptive_text(self, structured_page):
+        """
+        Given a page structured in a Beautiful Soup format, returns all descriptive text on page
+        :param structured_page: list of web pages, structured in Beautiful Soup format
+        :return: nothing, but should write a corpus of text to file
+        """
+        with open(self.filename, 'a') as f:
+            # identify all descriptions on web page matching the pattern in the PageScraper object
+            prod_description = structured_page.find_all('div', class_=re.compile(self.tag_pattern))
+            # then go through them
+            # this method is going to depend on the structure of the web page
+            # so I'm not sure how I would generalize it
+            for prod in prod_description:
+                if prod['class'][0] == self.tag_names[0]:
+                    for element in prod:
+                        if element.string:
+                            f.write(element.string)
+                elif prod['class'][0] == self.tag_names[1]:
+                    if prod.ul:
+                        for child in prod.ul.children:
+                            if child:
+                                if child.string:
+                                    f.write(child.string)
+                else:
+                    pass
 
 
 def open_page(url, inspect=False):
@@ -131,35 +158,8 @@ def read_soup(filename):
     # turn text file into a Beautiful Soup object
     structured_pages = []
     for web_page in all_pages[1:]:
-        structured_pages.append(BeautifulSoup(''.join([html_header,web_page]), 'lxml'))
+        structured_pages.append(BeautifulSoup(''.join([html_header, web_page]), 'lxml'))
     return structured_pages
-
-
-def locate_descriptive_text(structured_page, filename):
-    """
-    Given a page structured in a Beautiful Soup format, returns all descriptive text on page
-    :param structured_pages: list of web pages, structured in Beautiful Soup format
-    :param filename: the name of the file to which to write the corpus, string
-    :return: nothing, but should write a corpus of text to file
-    """
-    with open(filename, 'a') as f:
-        prod_description = structured_page.find_all('div', class_=re.compile("product"))
-        for prod in prod_description:
-            if prod['class'][0] == "product_description":
-                for element in prod:
-                    if element.string:
-                        f.write(element.string)
-            elif prod['class'][0] == "tab_content":
-                if prod.ul:
-                    for child in prod.ul.children:
-                        if child:
-                            if child.string:
-                                print(child.string)
-                                f.write(child.string)
-            else:
-                pass
-
-    return
 
 
 def find_id(url, id_sequence):
@@ -199,5 +199,6 @@ def identify_duplicates(url, master_list, id_sequence):
 
 if __name__ == '__main__':
     NumiTeaScraper = PageScraper('http://shop.numitea.com/Tea-by-Type/c/NumiTeaStore@ByType',
-                                 'c=NumiTeaStore@ByType', 'NUMIS-[0-9]*', 'tea_corpus.txt')
+                                 'c=NumiTeaStore@ByType', 'NUMIS-[0-9]*', 'tea_corpus.txt',
+                                 ('product_description', 'tab_content'), "product")
     NumiTeaScraper.scrape_page()
