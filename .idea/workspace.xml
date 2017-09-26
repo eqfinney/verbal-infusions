@@ -2,9 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b9d0a0d7-799c-42cc-a3db-fe2be2769056" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/twitter_bot.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vi.keys" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/create_status.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_create_status.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/thirteen_words.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.cache/v/cache/lastfailed" afterPath="$PROJECT_DIR$/.cache/v/cache/lastfailed" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/twitter_bot.py" afterPath="$PROJECT_DIR$/twitter_bot.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -19,7 +22,7 @@
         <entry file="file://$PROJECT_DIR$/web_scraper.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+              <caret line="152" column="0" lean-forward="false" selection-start-line="152" selection-start-column="0" selection-end-line="153" selection-end-column="23" />
               <folding>
                 <element signature="e#176#204#0" expanded="true" />
               </folding>
@@ -30,8 +33,8 @@
       <file leaf-file-name="tea_description.txt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tea_description.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
-              <caret line="60" column="37" lean-forward="false" selection-start-line="60" selection-start-column="37" selection-end-line="60" selection-end-column="37" />
+            <state relative-caret-position="305">
+              <caret line="843" column="301" lean-forward="false" selection-start-line="843" selection-start-column="297" selection-end-line="843" selection-end-column="301" />
               <folding />
             </state>
           </provider>
@@ -40,19 +43,35 @@
       <file leaf-file-name="twitter_bot.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/twitter_bot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360">
-              <caret line="20" column="61" lean-forward="false" selection-start-line="20" selection-start-column="61" selection-end-line="20" selection-end-column="61" />
-              <folding />
+            <state relative-caret-position="558">
+              <caret line="31" column="0" lean-forward="true" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
+              <folding>
+                <element signature="e#82#95#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="vi.keys" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/vi.keys">
+      <file leaf-file-name="create_status.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/create_status.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
+            <state relative-caret-position="815">
+              <caret line="131" column="0" lean-forward="true" selection-start-line="131" selection-start-column="0" selection-end-line="131" selection-end-column="0" />
+              <folding>
+                <element signature="e#94#125#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="test_create_status.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test_create_status.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="306">
+              <caret line="17" column="37" lean-forward="true" selection-start-line="17" selection-start-column="37" selection-end-line="17" selection-end-column="37" />
+              <folding>
+                <element signature="e#59#85#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -60,8 +79,8 @@
       <file leaf-file-name="test_web_scraper.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test_web_scraper.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state relative-caret-position="360">
+              <caret line="20" column="30" lean-forward="true" selection-start-line="20" selection-start-column="30" selection-end-line="20" selection-end-column="30" />
               <folding>
                 <element signature="e#238#264#0" expanded="true" />
               </folding>
@@ -82,6 +101,7 @@
     <findStrings>
       <find>prettify</find>
       <find>locate</find>
+      <find>Numi</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -94,7 +114,11 @@
         <option value="$PROJECT_DIR$/../recommender-systems/api.py" />
         <option value="$PROJECT_DIR$/test_web_scraper.py" />
         <option value="$PROJECT_DIR$/web_scraper.py" />
+        <option value="$PROJECT_DIR$/vi.keys" />
+        <option value="$PROJECT_DIR$/ten_words.txt" />
         <option value="$PROJECT_DIR$/twitter_bot.py" />
+        <option value="$PROJECT_DIR$/test_create_status.py" />
+        <option value="$PROJECT_DIR$/create_status.py" />
       </list>
     </option>
   </component>
@@ -213,7 +237,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="3" />
+      <option name="time" value="5" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -374,10 +398,54 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test_web_scraper.py">
+    <entry file="file://$PROJECT_DIR$/vi.keys">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="72">
+          <caret line="4" column="18" lean-forward="false" selection-start-line="4" selection-start-column="18" selection-end-line="4" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ten_words.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="36">
+          <caret line="2" column="18" lean-forward="true" selection-start-line="2" selection-start-column="18" selection-end-line="2" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/thirteen_words.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="36">
+          <caret line="2" column="18" lean-forward="true" selection-start-line="2" selection-start-column="18" selection-end-line="2" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/web_scraper.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <caret line="152" column="0" lean-forward="false" selection-start-line="152" selection-start-column="0" selection-end-line="153" selection-end-column="23" />
+          <folding>
+            <element signature="e#176#204#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test_create_status.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="17" column="37" lean-forward="true" selection-start-line="17" selection-start-column="37" selection-end-line="17" selection-end-column="37" />
+          <folding>
+            <element signature="e#59#85#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test_web_scraper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="20" column="30" lean-forward="true" selection-start-line="20" selection-start-column="30" selection-end-line="20" selection-end-column="30" />
           <folding>
             <element signature="e#238#264#0" expanded="true" />
           </folding>
@@ -386,35 +454,29 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/tea_description.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="60" column="37" lean-forward="false" selection-start-line="60" selection-start-column="37" selection-end-line="60" selection-end-column="37" />
+        <state relative-caret-position="305">
+          <caret line="843" column="301" lean-forward="false" selection-start-line="843" selection-start-column="297" selection-end-line="843" selection-end-column="301" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/web_scraper.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
-          <folding>
-            <element signature="e#176#204#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/twitter_bot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="20" column="61" lean-forward="false" selection-start-line="20" selection-start-column="61" selection-end-line="20" selection-end-column="61" />
-          <folding />
+        <state relative-caret-position="558">
+          <caret line="31" column="0" lean-forward="true" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
+          <folding>
+            <element signature="e#82#95#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/vi.keys">
+    <entry file="file://$PROJECT_DIR$/create_status.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="815">
+          <caret line="131" column="0" lean-forward="true" selection-start-line="131" selection-start-column="0" selection-end-line="131" selection-end-column="0" />
+          <folding>
+            <element signature="e#94#125#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
