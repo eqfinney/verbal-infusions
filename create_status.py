@@ -6,7 +6,6 @@
 from collections import Counter
 from collections import defaultdict
 import random
-import re
 
 
 def read_words(filename):
@@ -112,7 +111,7 @@ def markov_tweet(filename):
                         string = '.'.join(stringlist[:-1])
                     else:
                         string = '.'.join(stringlist[:-2])
-                    if string[-1] != '.':
+                    if string[-1:] != '.':
                         string = ''.join([string, '.'])
                     break
 

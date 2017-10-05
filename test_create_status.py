@@ -4,7 +4,6 @@
 #
 
 import create_status as cs
-from collections import Counter
 
 
 def test_read_words(filename='thirteen_words.txt'):

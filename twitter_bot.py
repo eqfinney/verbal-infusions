@@ -14,8 +14,8 @@ def authenticate_bot(filename):
     """
     with open(filename, 'r') as f:
         d = f.readlines()
-        api_key = d[1].strip()
-        api_secret = d[0].strip()
+        api_key = d[0].strip()
+        api_secret = d[1].strip()
         access_token = d[2].strip()
         access_secret = d[3].strip()
 
@@ -28,4 +28,5 @@ def authenticate_bot(filename):
 if __name__ == "__main__":
     auth = authenticate_bot('vi.keys')
     VerbalInfusions = tweepy.API(auth)
+    #import ipdb; ipdb.set_trace()
     VerbalInfusions.update_status(cs.markov_tweet('tea_description.txt'))
