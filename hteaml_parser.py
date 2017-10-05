@@ -7,7 +7,6 @@
 #
 
 
-import web_crawler as wc
 from bs4 import BeautifulSoup
 import re
 
@@ -96,10 +95,3 @@ def identify_duplicates(url, master_list, id_sequence):
     # if no ID number, treat the page as a duplicate and don't add it to the list
     else:
         return True
-
-
-if __name__ == '__main__':
-    NumiTeaScraper = wc.PageScraper('http://shop.numitea.com/Tea-by-Type/c/NumiTeaStore@ByType',
-                                    'c=NumiTeaStore@ByType', 'NUMIS-[0-9]*', 'tea_corpus.txt',
-                                    ('product_description', 'tab_content'), "product")
-    NumiTeaScraper.scrape_page()
