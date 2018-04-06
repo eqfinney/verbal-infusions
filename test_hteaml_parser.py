@@ -14,4 +14,4 @@ from bs4 import BeautifulSoup
 
 def test_read_soup(filename='tea_corpus.html'):
     file = hp.read_soup(filename)
-    assert type(file[0]) == type(BeautifulSoup('', 'lxml'))
+    assert type(next(file)) == type(BeautifulSoup('', 'lxml'))

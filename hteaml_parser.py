@@ -30,9 +30,9 @@ def read_soup(filename):
     all_pages = page.split(sep=html_header)
     # turn text file into a Beautiful Soup object
     structured_pages = []
-    for web_page in all_pages[1:]:
-        structured_pages.append(BeautifulSoup(''.join([html_header, web_page]), 'lxml'))
-    return structured_pages
+    for web_page in all_pages:
+        page = BeautifulSoup(''.join([html_header, web_page]), 'lxml')
+        yield page
 
 
 def locate_descriptive_text(structured_page, tag_pattern, tag_names, filename):
